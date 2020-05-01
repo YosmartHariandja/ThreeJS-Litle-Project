@@ -2,8 +2,8 @@ class Boid {
     constructor() {
         let multiPos = 100;
         let magnitude = 3.5;
-        this.position = new THREE.Vector3(Math.random() * multiPos * 2 * (Math.random() < 0.5 ? -1 : 1), Math.random() * multiPos * (Math.random() < 0.5 ? -1 : 1));
-        this.velocity = new THREE.Vector3((Math.random() * magnitude * (Math.random() < 0.5 ? -1 : 1)), (Math.random() * magnitude * (Math.random() < 0.5 ? -1 : 1)));
+        this.position = new THREE.Vector3(Math.random() * multiPos * 2 * (Math.random() < 0.5 ? -1 : 1), Math.random() * multiPos * (Math.random() < 0.5 ? -1 : 1), Math.random() * multiPos * (Math.random() < 0.5 ? -1 : 1));
+        this.velocity = new THREE.Vector3(Math.random() * magnitude * (Math.random() < 0.5 ? -1 : 1), Math.random() * magnitude * (Math.random() < 0.5 ? -1 : 1), Math.random() * magnitude * (Math.random() < 0.5 ? -1 : 1));
         this.acceleration = new THREE.Vector3();
         this.maxForce = 0.1;
         this.maxSpeed = 5;
@@ -12,8 +12,12 @@ class Boid {
         this.multCoh = Math.random();
         this.multSep = Math.random();
 
+        this.aRadius = 100;
+        this.cRadius = 100;
+        this.sRadius = 50;
+
         let boidGeo = new THREE.SphereGeometry(5, 20, 32);
-        let mat = new THREE.MeshBasicMaterial({ color: 0x00ffff})
+        let mat = new THREE.MeshPhongMaterial({ color: 0x31c4a0});
         this.boid = new THREE.Mesh(boidGeo, mat);
     }
 
@@ -34,7 +38,7 @@ class Boid {
     }
 
     align(boids) {
-        let perceptionRadius = 100;
+        let perceptionRadius = this.aRadius;
         let steering = new THREE.Vector3();
         let total = 0;
         for (let other of boids) {
@@ -54,7 +58,7 @@ class Boid {
     }
 
     cohesion(boids) {
-        let perceptionRadius = 100;
+        let perceptionRadius = this.cRadius;
         let steering = new THREE.Vector3();
         let total = 0;
         for (let other of boids) {
@@ -75,7 +79,7 @@ class Boid {
     }
 
     separation(boids) {
-        let perceptionRadius = 40;
+        let perceptionRadius = this.sRadius;
         let steering = new THREE.Vector3();
         let total = 0;
         for (let other of boids) {
@@ -97,10 +101,8 @@ class Boid {
         return steering;
     }
 
-    edges()
+    edges(width, height, depth)
     {
-        let width = 440;
-        let height = 225;
         if(this.position.x > width)
         {
             this.position.x = -width;
@@ -116,6 +118,14 @@ class Boid {
         {
             this.position.y = height;
         }
+
+        if(this.position.z > depth)
+        {
+            this.position.z = -depth;
+        } else if (this.position.z < -depth)
+        {
+            this.position.z = depth;
+        }
     }
 
     update() {
@@ -128,6 +138,7 @@ class Boid {
     show() {
         this.boid.position.x = this.position.x;
         this.boid.position.y = this.position.y;
+        this.boid.position.z = this.position.z;
         scene.add(this.boid);
     }
 }
