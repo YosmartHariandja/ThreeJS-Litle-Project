@@ -2,7 +2,7 @@ const flock = [];
 
 function setup() {
     for (let i = 0; i < 300; i++) {
-        flock.push(new Boid(innerWidth, innerHeight, 0));
+        flock.push(new Boid());
     }
 }
 setup();
