@@ -21,6 +21,6 @@ function draw() {
         }
         yoff += inc;
     }
-
+ 
     renderer.render( scene, cam );
 }
